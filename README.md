@@ -52,8 +52,8 @@ cp expample.env .env
 
 ```dotenv
 # Требуются для работы HH API
-ANDROID_CLIENT_ID=your_client_id
-ANDROID_CLIENT_SECRET=your_client_secret
+ANDROID_CLIENT_ID="Уже указан в примере"
+ANDROID_CLIENT_SECRET="Уже указан в примере"
 REDIRECT_URI=hhandroid://hh.ru/auth
 TOKEN_FILE=token.json
 
@@ -77,6 +77,8 @@ python hh_resume_updater.py auth
 ```
 
 При первом запуске или когда токен истёк, авторизация выполняется автоматически.
+
+Вам нужно вставить в скрипт ссылку вида hhandroid://
 
 ### Список резюме
 
