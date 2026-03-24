@@ -1,149 +1,149 @@
 # HH Resume Updater
 
-Утилита для автоматического поднятия резюме на hh.ru через официальное Android API.
+A utility for automatically updating resumes on hh.ru using the official Android API.
 
-За основу взят проект - https://github.com/s3rgeym/hh-applicant-tool 
-Оттуда взяли Anroid ключи и заголовки. За что отдельное спасибо автору, если используете это приложение не забудьте поставить "звездочку" автору оригинала!
+This project is based on https://github.com/s3rgeym/hh-applicant-tool.
+Android keys and headers were taken from there. Big thanks to the author; if you use this app, don’t forget to star the original project.
 
-## 📋 Описание
+## 📋 Description
 
-Скрипт позволяет управлять резюме на hh.ru:
-- просматривать список резюме,
-- поднимать отдельное резюме,
-- поднимать все резюме сразу.
+The script allows you to manage resumes on hh.ru:
+- list resumes,
+- bump a single resume,
+- bump all resumes at once.
 
-Поддерживается OAuth 2.0 авторизация и имитация Android-клиента для корректной работы API.
+OAuth 2.0 authorization is supported, and an Android client is emulated for proper API behavior.
 
-### Основные возможности
+### Main features
 
-- 🔐 OAuth 2.0 авторизация через Android-клиент
-- 📝 Просмотр списка резюме
-- ⬆️ Поднятие отдельных резюме или всех сразу
-- 💾 Автоматическое сохранение и обновление токенов
-- 📱 Рандомный User-Agent как в Android-приложении
-- 🤖 Уведомления в Telegram (при настройке)
+- 🔐 OAuth 2.0 authorization through Android client
+- 📝 List resumes
+- ⬆️ Bump individual resume or all resumes
+- 💾 Automatic token save and refresh
+- 📱 Random User-Agent like Android app
+- 🤖 Telegram notifications (optional)
 
-## 🚀 Установка
+## 🚀 Installation
 
-1. Клонируйте репозиторий:
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/s0rkin/hh_resume_updater
 cd hh_resume_updater
 ```
 
-2. Установите зависимости:
+2. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Создайте конфигурацию:
+3. Create configuration:
 
 ```bash
-cp expample.env .env
+cp example.env .env
 ```
 
-4. Заполните `.env` по шаблону.
+4. Fill in `.env` according to the template.
 
-## ⚙️ Конфигурация (.env)
+## ⚙️ Configuration (.env)
 
-Заполните следующие параметры в файле `.env`:
+Fill in the following parameters in `.env`:
 
 ```dotenv
-# Требуются для работы HH API
-ANDROID_CLIENT_ID="Уже указан в примере"
-ANDROID_CLIENT_SECRET="Уже указан в примере"
+# Required for HH API
+ANDROID_CLIENT_ID="Already in example"
+ANDROID_CLIENT_SECRET="Already in example"
 REDIRECT_URI=hhandroid://hh.ru/auth
 TOKEN_FILE=settings.json
 
-# Опционально (для Telegram-уведомлений)
+# Optional (for Telegram notifications)
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
 PROXY_HOST=http://proxy.example.com:8080
 ```
 
-### Где взять данные
+### Where to get values
 
-- `TELEGRAM_BOT_TOKEN` — в @BotFather.
-- `TELEGRAM_CHAT_ID` — через @userinfobot.
+- `TELEGRAM_BOT_TOKEN` from @BotFather.
+- `TELEGRAM_CHAT_ID` from @userinfobot.
 
-## 🛠️ Использование
+## 🛠️ Usage
 
-### Авторизация
+### Authorization
 
 ```bash
 python main.py auth
 ```
 
-При первом запуске или когда токен истёк, авторизация выполняется автоматически.
+On first run or if token expired, authorization is performed automatically.
 
-Вам нужно вставить в скрипт ссылку вида hhandroid://
+A link of the form `hhandroid://` should be inserted into the script.
 
-### Список резюме
+### List resumes
 
 ```bash
 python main.py list
 ```
 
-### Поднять резюме
+### Bump resume
 
-Поднять все:
+Bump all:
 
 ```bash
 python main.py upgrade
 ```
 
-Поднять конкретное по ID:
+Bump specific resume by ID:
 
 ```bash
 python main.py upgrade <resume_id>
 ```
 
-## 📌 Примеры
+## 📌 Examples
 
 ```bash
-# Показать список резюме
+# List resumes
 python main.py list
 
-# Поднять резюме с ID
+# Bump resume by ID
 python main.py upgrade 123456789
 
-# Поднять все резюме
+# Bump all resumes
 python main.py upgrade
 ```
 
-## 🔄 Автоматизация (cron)
+## 🔄 Automation (cron)
 
-Запустите по расписанию, например каждые 2 часа:
+Schedule with cron, e.g., every 2 hours:
 
 ```cron
 0 */2 * * * cd /path/to/project && python main.py upgrade >> logs.txt 2>&1
 ```
 
-## 📊 Логика работы с токенами
+## 📊 Token handling
 
-- Токен сохраняется в `TOKEN_FILE`.
-- При истечении токена он обновляется через `refresh_token`.
-- Если обновление не удалось, требуется повторная авторизация через `auth`.
+- Token is saved in `TOKEN_FILE`.
+- If token is expired, it is refreshed using `refresh_token`.
+- If refresh fails, re-authorization with `auth` is required.
 
-## 📝 Примечания
+## 📝 Notes
 
-- Имитируется поведение Android-приложения для стабильной работы API.
-- Между поднятиями резюме скрипт делает паузу ~2 секунды (ограничения API).
-- Ошибки логируются в консоль и отправляются в Telegram (если настроено).
-- Успехи также отправляются в Telegram (если настроено).
+- Android app behavior is emulated for stable API operation.
+- There is a ~2 seconds delay between bump operations to respect API limits.
+- Errors are logged to console and sent to Telegram (if configured).
+- Success notifications are also sent to Telegram (if configured).
 
-## ⚠️ Важно
+## ⚠️ Important
 
-- Не передавайте `settings.json` третьим лицам.
-- Не публикуйте `.env` с реальными данными.
-- Соблюдайте правила hh.ru и лимиты запросов.
+- Do not share `settings.json` with third parties.
+- Do not publish `.env` with real credentials.
+- Respect hh.ru rules and rate limits.
 
-## 📄 Лицензия
+## 📄 License
 
 MIT
 
-## 🤝 Вклад в проект
+## 🤝 Contribution
 
-Предложения по улучшению приветствуются. Открывайте issue или pull request.
+Suggestions are welcome. Open an issue or pull request.
