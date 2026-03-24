@@ -55,7 +55,7 @@ cp expample.env .env
 ANDROID_CLIENT_ID="Уже указан в примере"
 ANDROID_CLIENT_SECRET="Уже указан в примере"
 REDIRECT_URI=hhandroid://hh.ru/auth
-TOKEN_FILE=token.json
+TOKEN_FILE=settings.json
 
 # Опционально (для Telegram-уведомлений)
 TELEGRAM_BOT_TOKEN=your_bot_token
@@ -73,7 +73,7 @@ PROXY_HOST=http://proxy.example.com:8080
 ### Авторизация
 
 ```bash
-python hh_resume_updater.py auth
+python main.py auth
 ```
 
 При первом запуске или когда токен истёк, авторизация выполняется автоматически.
@@ -83,7 +83,7 @@ python hh_resume_updater.py auth
 ### Список резюме
 
 ```bash
-python hh_resume_updater.py list
+python main.py list
 ```
 
 ### Поднять резюме
@@ -91,26 +91,26 @@ python hh_resume_updater.py list
 Поднять все:
 
 ```bash
-python hh_resume_updater.py upgrade
+python main.py upgrade
 ```
 
 Поднять конкретное по ID:
 
 ```bash
-python hh_resume_updater.py upgrade <resume_id>
+python main.py upgrade <resume_id>
 ```
 
 ## 📌 Примеры
 
 ```bash
 # Показать список резюме
-python hh_resume_updater.py list
+python main.py list
 
 # Поднять резюме с ID
-python hh_resume_updater.py upgrade 123456789
+python main.py upgrade 123456789
 
 # Поднять все резюме
-python hh_resume_updater.py upgrade
+python main.py upgrade
 ```
 
 ## 🔄 Автоматизация (cron)
@@ -118,7 +118,7 @@ python hh_resume_updater.py upgrade
 Запустите по расписанию, например каждые 2 часа:
 
 ```cron
-0 */2 * * * cd /path/to/project && python hh_resume_updater.py upgrade >> logs.txt 2>&1
+0 */2 * * * cd /path/to/project && python main.py upgrade >> logs.txt 2>&1
 ```
 
 ## 📊 Логика работы с токенами
@@ -136,7 +136,7 @@ python hh_resume_updater.py upgrade
 
 ## ⚠️ Важно
 
-- Не передавайте `token.json` третьим лицам.
+- Не передавайте `settings.json` третьим лицам.
 - Не публикуйте `.env` с реальными данными.
 - Соблюдайте правила hh.ru и лимиты запросов.
 
