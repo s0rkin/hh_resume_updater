@@ -125,20 +125,49 @@ def authorize():
 # Работа с сохранённым токеном
 # ----------------------------------------------------------------------
 
-def load_token():
-    """Загружает токен из файла, если он ещё не истёк."""
+def load_token(include_expired=False):
+    """
+    Загружает токен из файла.
+    Если include_expired=True, возвращает токен даже если он истек.
+    """
     if not os.path.exists(TOKEN_FILE):
         return None
     with open(TOKEN_FILE, 'r') as f:
         data = json.load(f)
-    expires_at = datetime.fromisoformat(data['expires_at'])
-    if datetime.now() >= expires_at:
-        return None
+    
+    if not include_expired:
+        expires_at = datetime.fromisoformat(data['expires_at'])
+        if datetime.now() >= expires_at:
+            return None
+    
     return data
 
 def save_token(token):
     with open(TOKEN_FILE, 'w') as f:
         json.dump(token, f, indent=2)
+
+def check_token_status():
+    """Диагностика состояния токена"""
+    if not os.path.exists(TOKEN_FILE):
+        print("Token file does not exist")
+        return None
+    
+    with open(TOKEN_FILE, 'r') as f:
+        data = json.load(f)
+    
+    print(f"Token file exists")
+    print(f"  - expires_at: {data.get('expires_at')}")
+    print(f"  - has refresh_token: {'refresh_token' in data}")
+    
+    if 'expires_at' in data:
+        expires_at = datetime.fromisoformat(data['expires_at'])
+        now = datetime.now()
+        if now >= expires_at:
+            print(f"  - Status: EXPIRED (expired {now - expires_at} ago)")
+        else:
+            print(f"  - Status: VALID (expires in {expires_at - now})")
+    
+    return data
 
 def refresh_token(refresh_token_value):
     """Обновляет токен по refresh_token."""
@@ -182,18 +211,23 @@ def get_valid_token(force_auth=False):
     Возвращает действующий access_token.
     Если force_auth=True, игнорирует сохранённый токен и запускает новую авторизацию.
     """
+    # Диагностика
+    token_status = check_token_status()
+
     if force_auth:
         print("Force auth requested, authorizing...")
         token = authorize()
         save_token(token)
         return token['access_token']
 
-    token = load_token()
+    # Загружаем токен, даже если истек
+    token = load_token(include_expired=True)
+    
     if token:
         expires_at = datetime.fromisoformat(token['expires_at'])
         current_time = datetime.now()
         
-        # Обновляем токен ТОЛЬКО если он истек
+        # Проверяем, истек ли токен
         if current_time >= expires_at:
             print("Token expired, refreshing...")
             new_token = refresh_token(token['refresh_token'])
@@ -203,8 +237,10 @@ def get_valid_token(force_auth=False):
                 return new_token['access_token']
             else:
                 print("Failed to refresh token, need new authorization")
+                # Удаляем старый токен
                 if os.path.exists(TOKEN_FILE):
                     os.remove(TOKEN_FILE)
+                # Запрашиваем новую авторизацию
                 token = authorize()
                 save_token(token)
                 return token['access_token']
@@ -214,7 +250,7 @@ def get_valid_token(force_auth=False):
             print(f"Token is valid, expires in {time_left}")
             return token['access_token']
     else:
-        print("Token not found, authorizing...")
+        print("Token file not found, authorizing...")
         token = authorize()
         save_token(token)
         return token['access_token']
