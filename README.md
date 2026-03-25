@@ -12,11 +12,9 @@ The script allows you to manage resumes on hh.ru:
 - bump a single resume,
 - bump all resumes at once.
 
-OAuth 2.0 authorization is supported, and an Android client is emulated for proper API behavior.
-
 ### Main features
 
-- 🔐 OAuth 2.0 authorization through Android client
+- 🔐 authorization through Android client
 - 📝 List resumes
 - ⬆️ Bump individual resume or all resumes
 - 💾 Automatic token save and refresh
@@ -76,7 +74,7 @@ PROXY_HOST=http://proxy.example.com:8080
 python main.py auth
 ```
 
-On first run or if token expired, authorization is performed automatically.
+On first run or if token expired, authorization is performed manual.
 
 A link of the form `hhandroid://` should be inserted into the script.
 
