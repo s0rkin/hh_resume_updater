@@ -115,10 +115,10 @@ python main.py upgrade
 
 ## 🔄 Automation (cron)
 
-Schedule with cron, e.g., every 2 hours:
+Schedule with cron, e.g., every 5 hours:
 
 ```cron
-0 */2 * * * cd /path/to/project && python main.py upgrade >> logs.txt 2>&1
+0 */5 * * * cd /path/to/project && python main.py upgrade >> logs.txt 2>&1
 ```
 
 ## 📊 Token handling
