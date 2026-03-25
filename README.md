@@ -118,7 +118,7 @@ python main.py upgrade
 Schedule with cron, e.g., every 5 hours:
 
 ```cron
-0 */5 * * * cd /path/to/project && python main.py upgrade >> logs.txt 2>&1
+0 */5 * * * /home/user/hh_resume_updater/venv/bin/python /home/user/hh_resume_updater/main.py upgrade >> /var/log/hh_resume_updater.log
 ```
 
 ## 📊 Token handling
